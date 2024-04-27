@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+    # Use Pooling if Windows files systme shows any Hot Reloading isues.
+    # Uncomment the below 2 environment variables if HOT Reloading(HR) is Not working.
+    # environment:
+    #   - CHOKIDAR_USEPOLLING=true
+    #   - CHOKIDAR_INTERVAL=1000
+    stdin_open: true
+    tty: true

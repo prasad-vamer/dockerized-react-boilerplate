@@ -136,3 +136,140 @@ Any change happends in either will be sync in the other.
 So even without Node installed in my local machine I have created a react ts App.
 
 This Mark the END of Step 2.
+
+### StoryLine 4: Lets Dockerize
+Now that we have a React ts app. the next thing is to run this app in the docker environment.
+We will be uding docker and docker compose.
+
+
+### 3. Docker file
+
+`FROM node:22.0.0`
+
+This line specifies the base image for the Docker container. It uses the Node.js image with version 22.0.0. The `node` image provides a pre-configured environment for running Node.js applications.
+
+`# Set the working directory`
+`WORKDIR /app`
+
+These lines add comments and set the working directory inside the container to `/app`. Any subsequent instructions in the Dockerfile will be executed in this directory.
+
+`# Copy package.json and package-lock.json`
+`COPY package*.json ./`
+
+These lines copy the `package.json` and `package-lock.json` files from the host machine to the current directory (`.`) inside the container. The `package*.json` pattern matches both `package.json` and `package-lock.json` files.
+
+`# Install dependencies`
+`RUN npm install`
+
+This line runs the `npm install` command inside the container to install the dependencies specified in the `package.json` file. It ensures that all required packages are installed before proceeding.
+
+`# Copy the rest of the application`
+`COPY . .`
+
+This line copies the entire contents of the build context (the directory containing the Dockerfile) to the current directory (`.`) inside the container. It effectively copies all the application files into the container.
+
+`# Expose the port the app runs on`
+`EXPOSE 5173`
+
+This line exposes port 5173 from the container to the host machine. It indicates that the application inside the container will listen on port 5173. However, it does not automatically publish the port; you need to use the `-p` flag when running the container to map the container port to a host port.
+
+`# Command to run the application`
+`CMD ["npm", "run", "dev"]`
+
+This line specifies the default command to run when the container starts. In this case, it runs the command `npm run dev`, which is typically used to start the development server for a Node.js application. The command is executed inside the container's working directory (`/app`).
+
+### 4. Docker Compose file
+
+`version: '3.8'`
+
+This line specifies the version of the Docker Compose file format. It indicates that the file uses version 3.8 of the Compose file format.
+
+`services:`
+
+This line starts the definition of the services section, which contains the configuration for the Docker containers that make up the application.
+
+`app:`
+
+This line defines a service named "app" for the application container.
+
+`build: .`
+
+This line specifies that the "app" service should be built using the Dockerfile located in the current directory (`.`). It instructs Docker Compose to build the image based on the Dockerfile.
+
+`ports:`
+`- "5173:5173"`
+
+These lines define the port mapping for the "app" service. It maps port 5173 from the host machine to port 5173 inside the container. This allows accessing the application running inside the container through the specified port on the host machine.
+
+`volumes:`
+`- .:/app`
+
+These lines define a volume mapping for the "app" service. It mounts the current directory (`.`) on the host machine to the `/app` directory inside the container. This allows the application code to be synchronized between the host and the container, enabling live reloading during development.
+
+`# Use Pooling if Windows files systme shows any Hot Reloading isues.`
+`# Uncomment the below 2 environment variables if HOT Reloading(HR) is Not working.`
+`# environment:`
+`# - CHOKIDAR_USEPOLLING=true`
+`# - CHOKIDAR_INTERVAL=1000`
+
+These lines are commented out and provide instructions for resolving hot reloading issues on Windows file systems. If hot reloading is not working correctly, uncommenting the `environment` section and the specified environment variables (`CHOKIDAR_USEPOLLING` and `CHOKIDAR_INTERVAL`) can help resolve the issue by enabling file system polling.
+
+`stdin_open: true`
+`tty: true`
+
+These lines configure the "app" service to keep the standard input open (`stdin_open`) and allocate a pseudo-TTY (`tty`). This allows interactive input and enables attaching to the container's console.
+
+
+### StoryLine 5: Run our react App.
+We have successfully dockerized our react ts app.
+Now that we can test its working by running the app.
+
+Build the docker image.
+```
+docker compose build --no-cache
+```
+
+Run the container.
+```
+docker compose up
+```
+
+
+React App is running on port 5173.
+```
+app-1  |   VITE v5.2.10  ready in 3185 ms
+app-1  | 
+app-1  |   ➜  Local:   http://localhost:5173/
+app-1  |   ➜  Network: use --host to expose
+app-1  |   ➜  press h + enter to show help
+```
+
+Try accessing http://localhost:5173/
+
+## Stuck 1. Site can't be reached.
+When I access the site http://localhost:5173/ nothing comes.
+I cannot access the react app.
+What Went Wrong!
+
+### Vite Server Binding
+Vite, by default, may bind to the local interface (127.0.0.1 or localhost) inside the container, which would prevent it from being accessible from outside the container. 
+
+Adjust the package.json to use the --host flag, which should solve this issue by binding to 0.0.0.0. 
+So Update the package.json as below
+package.json
+```
+"scripts": {
+  "dev": "vite --host",
+  ...
+},
+```
+add --host flag to the command.
+
+Stop the container by pressing Ctrl+C
+
+Run the container again.
+```
+docker compose up
+```
+
+YES.... The react app is working and listening on port 5173.
