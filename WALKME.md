@@ -407,3 +407,37 @@ Added `"./src/**/*.{js,jsx,ts,tsx,html}"` in the content array.
 
 Stop and rerun the App.
 `docker compose up`
+
+## Adding React Router DOM
+
+Refering [official site](https://reactrouter.com/en/main/start/tutorial)
+run the below code in the 'app' service container.
+
+```
+npm install react-router-dom
+```
+
+### StoryLine 7:
+I have erased the basic CSS and its imports and created two folders.
+Components and Containers to Properly organize the Pages and resuable components in my project.
+
+Implemented simple code like this.
+```
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root/>,
+    children: [
+      {
+        path: "/",
+        element: <Home />
+      },
+      {
+        path: "/about",
+        element: <About />
+      }
+    ]
+  },
+])
+```
+Provided Link to go to home and About page.

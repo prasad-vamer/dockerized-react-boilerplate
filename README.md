@@ -9,6 +9,7 @@ This is a boilerplate project for building React applications with TypeScript. I
 - Multiple branches with different configurations and features:
   - `plain_vite_react`: Basic React TypeScript application
   - `react_ts_twcss`: React TypeScript application with Tailwind CSS configured
+  - `react_router_6-23-0`: This is an ideal starting point for React projects utilizing React Router 6.23.0 and Tailwind CSS
   
 
 ## Branch Structure
@@ -35,6 +36,9 @@ The [plain_vite_react](https://github.com/prasad-vamer/dockerized-react-boilerpl
 ### 2. `react_ts_twcss`
 
 The [react_ts_twcss](https://github.com/prasad-vamer/dockerized-react-boilerplate/tree/react_ts_twcss) branch extends the basic React TypeScript application from the `plain_vite_react` branch and includes the configuration for Tailwind CSS. It allows you to quickly build React components with utility-first styling using Tailwind CSS.
+
+### 3. `react_router_6-23-0`
+The [react_router_6-23-0](https://github.com/prasad-vamer/dockerized-react-boilerplate/tree/react_router_6-23-0) branch is a template for React projects that includes React Router 6.23.0 and Tailwind CSS. The project consist of configurations till `react_ts_twcss` and has been cleaned up and organized into `Components` and `Container` directories to follow react atomic design folder structure. The `Container` directory includes sample pages demonstrating the implementation of React Router. This branch is an ideal starting point for React projects utilizing Tailwind CSS and React Router.
 
 ## Prerequisites
 
