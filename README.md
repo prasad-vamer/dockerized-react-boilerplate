@@ -16,11 +16,13 @@ This is a boilerplate project for building React applications with TypeScript. I
 
 - `main` branch:
 
-The main branch serves as the central hub for the latest feature development and configuration creation.
-It represents the most up-to-date and cutting-edge work in progress.
-New features and configurations are initially developed and tested in the main branch.
+The main branch serves as the central hub for the latest stable features and configurations. 
+It represents the most up-to-date and production-ready code. When a feature or configuration is independently developed in a separate branch and reaches a stable and complete state, it is merged into the main branch.
 
 - `Feature/Configuration` branches:
+When a new feature or configuration is being developed, a dedicated branch is created specifically for that work.
+Once a feature or configuration is complete, it is merged into the main branch. 
+These branches are useful for referencing specific features or configurations.
 
 When a feature or configuration in the main branch reaches a stable and complete state, a new branch is created specifically for that feature or configuration.
 The purpose of these dedicated branches is to provide a fixed and immutable snapshot of the completed work.
