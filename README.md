@@ -8,6 +8,7 @@ This is a boilerplate project for building React applications with TypeScript. I
 - Dockerized development environment
 - Multiple branches with different configurations and features:
   - `plain_vite_react`: Basic React TypeScript application
+  - `react_ts_twcss`: React TypeScript application with Tailwind CSS configured
   
 
 ## Branch Structure
@@ -30,6 +31,10 @@ These branches are useful for referencing or deploying specific features or conf
 ### 1. `plain_vite_react`
 
 The [plain_vite_react](https://github.com/prasad-vamer/dockerized-react-boilerplate/tree/plain_vite_react) branch contains a basic React TypeScript application without any additional configurations or features. It serves as a starting point for building React applications with TypeScript.
+
+### 2. `react_ts_twcss`
+
+The [react_ts_twcss](https://github.com/prasad-vamer/dockerized-react-boilerplate/tree/react_ts_twcss) branch extends the basic React TypeScript application from the `plain_vite_react` branch and includes the configuration for Tailwind CSS. It allows you to quickly build React components with utility-first styling using Tailwind CSS.
 
 ## Prerequisites
 
@@ -69,6 +74,20 @@ This will start the application and make it accessible at `http://localhost:5173
 The source code for the React application is located in the `src` directory.
 
 You can modify the code and the changes will be automatically reflected in the browser.
+
+### Usefull commands
+#### 1. Enter into the bash shell of the 'app' service container.
+Accessing the interactive shell (bash) inside the running container named "app" defined in the Docker Compose file.
+
+When the app service is running
+```
+docker-compose run app bash
+```
+
+When the app service is not running
+```
+docker-compose exec app bash
+```
 
 ## Add dependencies
 To install new dependencies, you can use the following command:
