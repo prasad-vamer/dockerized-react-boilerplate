@@ -273,3 +273,99 @@ docker compose up
 ```
 
 YES.... The react app is working and listening on port 5173.
+
+## Stuck 2. WARN[0000] ......../docker-compose.yml: 'version' is obsolete
+The warning you see (WARN[0000] ......../docker-compose.yml: 'version' is obsolete) is informing you that specifying the version is no longer necessary and can be omitted unless you need it for specific compatibility reasons or are using Docker Swarm.
+
+## Integrating Tailwind CSS
+
+### StoryLine 6: Including Tailwind CSS Configurations
+Now, let's integrate Tailwind CSS into the ReactTS boileplate. Tailwind CSS is a utility-first CSS framework that can significantly speed up your design process. Here’s how you can set it up within your Vite and React project.
+
+### 1. Install Tailwind CSS
+First, open your terminal, make sure you're in your project directory.
+Enter into the bash shell of the 'app' service container.
+
+To do this, you can use the docker-compose exec command followed by the service name and the shell you want to use (in this case, bash). Here's the command:
+
+```
+docker-compose exec app bash
+```
+Now lets install the tailwind css and its dependencies
+
+run
+```
+npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
+```
+
+These commands install Tailwind CSS, its peer dependencies, and PostCSS, which Tailwind uses under the hood.
+
+### 2. Create Tailwind Config Files
+Next, generate your tailwind.config.js and postcss.config.js files. These files are used to configure Tailwind and PostCSS. 
+
+Run the following command in your app bash:
+
+```
+npx tailwindcss init -p
+```
+
+This command will create a minimal tailwind.config.js and a postcss.config.js with Tailwind as a plugin. The -p flag generates both the Tailwind configuration file and the PostCSS configuration file.
+
+### 3: Include Tailwind in Your CSS
+You now need to include Tailwind's directives in your CSS. Open (or create) your project's main CSS file, which is located at src/index.css or a similar path depending on your project's structure. Then, add the following Tailwind directives to the top of your CSS file:
+
+```
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+These directives inject Tailwind's base styles, component classes, and utility classes into your stylesheet.
+
+### 4: Ensure Your Project is Using the CSS File
+Make sure that your project imports the CSS file where you added the Tailwind directives. This is usually done in your main JavaScript entry file, such as src/main.tsx or src/index.js (or tsx if you're using TypeScript). For example:
+
+```
+import './index.css';
+```
+
+### 5: Run Your Project
+Run your Vite project to ensure that Tailwind CSS is correctly integrated. If you've followed the steps above, Tailwind's utility classes should now be available for use in your project.
+
+```
+docker compose up --build
+```
+
+## Stuck 3. Even if Tailwind is configured the styles were not for my Sample TWCSS I defined.
+I got this log i the console.
+
+```
+app-1  | warn - The `content` option in your Tailwind CSS configuration is missing or empty.
+app-1  | warn - Configure your content sources or your generated CSS will be missing styles.
+app-1  | warn - https://tailwindcss.com/docs/content-configuration
+```
+
+### Issue
+The warning you received indicates that the content array in your Tailwind CSS configuration is empty. This array should list the paths to all of your HTML and JavaScript files that use Tailwind CSS classes. Without this, Tailwind can't scan your files to generate the necessary CSS, leading to a much larger CSS file that includes all possible Tailwind styles, or it may fail to include styles that are actually used in your project.
+
+### Fix
+To fix this, you need to specify the paths to your project's content files where you use Tailwind CSS classes. For example, if you're using Tailwind in a React project, your content configuration might look like this:
+
+```
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx,html}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+
+```
+
+Added `"./src/**/*.{js,jsx,ts,tsx,html}"` in the content array.
+
+Stop and rerun the App.
+`docker compose up`
