@@ -144,6 +144,30 @@ We will be uding docker and docker compose.
 
 ### 3. Docker file
 
+create a file named `Dockerfile` in the root directory and copy the below contents
+```
+FROM node:22.0.0
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application
+COPY . .
+
+# Expose the port the app runs on
+EXPOSE 5173
+
+# Command to run the application
+CMD ["npm", "run", "dev"]
+
+```
+
 `FROM node:22.0.0`
 
 This line specifies the base image for the Docker container. It uses the Node.js image with version 22.0.0. The `node` image provides a pre-configured environment for running Node.js applications.
@@ -180,10 +204,24 @@ This line specifies the default command to run when the container starts. In thi
 
 ### 4. Docker Compose file
 
-`version: '3.8'`
+create a file named `docker-compose.yml` in the root directory and copy the below contents
+```
+services:
+  app:
+    build: .
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+    # Use Pooling if Windows files systme shows any Hot Reloading isues.
+    # Uncomment the below 2 environment variables if HOT Reloading(HR) is Not working.
+    # environment:
+    #   - CHOKIDAR_USEPOLLING=true
+    #   - CHOKIDAR_INTERVAL=1000
+    stdin_open: true
+    tty: true
 
-This line specifies the version of the Docker Compose file format. It indicates that the file uses version 3.8 of the Compose file format.
-
+```
 `services:`
 
 This line starts the definition of the services section, which contains the configuration for the Docker containers that make up the application.
