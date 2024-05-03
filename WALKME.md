@@ -541,3 +541,49 @@ export default defineConfig({
 
 ### StoryLine 9: Why => Updating vite.config.ts & Updating tsconfig.json 
 - These configurations are crucial for managing complex project structures and maintaining consistency between development and production environments.
+
+### 3. Run the Shadcn CLI
+Run the shadcn-ui init command to setup your project:
+
+Before installing Shadcn i have created a folder for that.
+`src/@/shadcn`
+
+```
+npx shadcn-ui@latest init
+```
+they will ask lot of configurations.
+I have done like this
+
+```
+root@b7fdcbbb0c0e:/app# npx shadcn-ui@latest init
+Need to install the following packages:
+shadcn-ui@0.8.0
+Ok to proceed? (y) y
+✔ Would you like to use TypeScript (recommended)? … no / yes
+✔ Which style would you like to use? › Default
+✔ Which color would you like to use as base color? › Slate
+✔ Where is your global CSS file? … src/index.css
+✔ Would you like to use CSS variables for colors? … no / yes
+✔ Are you using a custom tailwind prefix eg. tw-? (Leave blank if not) … 
+✔ Where is your tailwind.config.js located? … tailwind.config.js
+✔ Configure the import alias for components: … @/shadcn/components
+✔ Configure the import alias for utils: … @/shadcn/lib/utils
+✔ Are you using React Server Components? … no / yes
+✔ Write configuration to components.json. Proceed? … yes
+
+✔ Writing components.json...
+✔ Initializing project...
+✔ Installing dependencies...
+
+Success! Project initialization completed. You may now add components.
+```
+
+### 4. Lets Test by adding a button
+
+```
+npx shadcn-ui@latest add button
+```
+
+this will add a create a file like this
+`src/@/shadcn/components/ui/button.tsx`
+ 
