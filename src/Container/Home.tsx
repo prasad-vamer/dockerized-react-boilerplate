@@ -1,3 +1,4 @@
+import { Button } from "@/shadcn/components/ui/button";
 import { Link } from "react-router-dom";
 
 function Home() {
@@ -8,6 +9,8 @@ function Home() {
       <p>Fine me in src/Container/Home.tsx</p>
       <br />
       <Link to={"/about"}>Go to About Page</Link>
+      <br />
+      <Button>Shadcn Button</Button>
     </div>
   )
 }

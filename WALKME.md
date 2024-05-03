@@ -441,3 +441,149 @@ const router = createBrowserRouter([
 ])
 ```
 Provided Link to go to home and About page.
+
+## Adding Shadcn UI to our project
+
+Following [official document](https://ui.shadcn.com/docs/installation/vite)
+
+### StoryLine 8: Why and what is @
+in the official documentation they are using @ folder to store shadcn components and lib.
+@ folder resides inside ./src folder.
+here we are planning to use ./src/@/shadcn directory structure.
+
+this is done expecting  that at future mode best powerfull libraries will come and we need to accomodate them in the same @ folder.
+
+so below setups will tailored to use ./src/@/shadcn directory structure.
+
+### 1. Update the tsconfig.json as below to include baseUrl and paths to resole paths
+
+`Updating tsconfig.json:`
+
+- Base URL and Paths: This setup defines the base URL for TypeScript compilation and specific path mappings. By setting "baseUrl": "." and defining paths such as "@/*": ["./src/@/*"], TypeScript can resolve modules based on these aliases, mirroring the Vite configuration. This ensures that both the Vite development server and the TypeScript compiler understand and resolve paths in the same way, preventing module resolution errors and facilitating easier code navigation and refactoring.
+
+Add below code to tsconfig.json
+```
+// to resolve paths:
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/@/*"
+      ]
+    }
+```
+
+My tsconfig loks like this
+
+```
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // to resolve paths:
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/@/*"
+      ]
+    }
+
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
+```
+
+
+### 2. Update vite.config.ts
+`Installing @types/node`: 
+
+```
+npm i -D @types/node
+```
+
+- This command installs type definitions for Node.js, which are used to provide TypeScript type checking and auto-completion for Node.js core modules, like path.
+
+- Configuring Vite: The provided Vite configuration sets up an alias ("@": path.resolve(__dirname, "./src/@")). This allows you to use @ in your import statements to refer directly to files within the src/@ directory, simplifying imports and ensuring consistency across your application.
+
+```
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src/@"),
+    }
+  }
+})
+```
+
+### StoryLine 9: Why => Updating vite.config.ts & Updating tsconfig.json 
+- These configurations are crucial for managing complex project structures and maintaining consistency between development and production environments.
+
+### 3. Run the Shadcn CLI
+Run the shadcn-ui init command to setup your project:
+
+Before installing Shadcn i have created a folder for that.
+`src/@/shadcn`
+
+```
+npx shadcn-ui@latest init
+```
+they will ask lot of configurations.
+I have done like this
+
+```
+root@b7fdcbbb0c0e:/app# npx shadcn-ui@latest init
+Need to install the following packages:
+shadcn-ui@0.8.0
+Ok to proceed? (y) y
+✔ Would you like to use TypeScript (recommended)? … no / yes
+✔ Which style would you like to use? › Default
+✔ Which color would you like to use as base color? › Slate
+✔ Where is your global CSS file? … src/index.css
+✔ Would you like to use CSS variables for colors? … no / yes
+✔ Are you using a custom tailwind prefix eg. tw-? (Leave blank if not) … 
+✔ Where is your tailwind.config.js located? … tailwind.config.js
+✔ Configure the import alias for components: … @/shadcn/components
+✔ Configure the import alias for utils: … @/shadcn/lib/utils
+✔ Are you using React Server Components? … no / yes
+✔ Write configuration to components.json. Proceed? … yes
+
+✔ Writing components.json...
+✔ Initializing project...
+✔ Installing dependencies...
+
+Success! Project initialization completed. You may now add components.
+```
+
+### 4. Lets Test by adding a button
+
+```
+npx shadcn-ui@latest add button
+```
+
+this will add a create a file like this
+`src/@/shadcn/components/ui/button.tsx`
+ 
