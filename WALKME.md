@@ -441,3 +441,103 @@ const router = createBrowserRouter([
 ])
 ```
 Provided Link to go to home and About page.
+
+## Adding Shadcn UI to our project
+
+Following [official document](https://ui.shadcn.com/docs/installation/vite)
+
+### StoryLine 8: Why and what is @
+in the official documentation they are using @ folder to store shadcn components and lib.
+@ folder resides inside ./src folder.
+here we are planning to use ./src/@/shadcn directory structure.
+
+this is done expecting  that at future mode best powerfull libraries will come and we need to accomodate them in the same @ folder.
+
+so below setups will tailored to use ./src/@/shadcn directory structure.
+
+### 1. Update the tsconfig.json as below to include baseUrl and paths to resole paths
+
+`Updating tsconfig.json:`
+
+- Base URL and Paths: This setup defines the base URL for TypeScript compilation and specific path mappings. By setting "baseUrl": "." and defining paths such as "@/*": ["./src/@/*"], TypeScript can resolve modules based on these aliases, mirroring the Vite configuration. This ensures that both the Vite development server and the TypeScript compiler understand and resolve paths in the same way, preventing module resolution errors and facilitating easier code navigation and refactoring.
+
+Add below code to tsconfig.json
+```
+// to resolve paths:
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/@/*"
+      ]
+    }
+```
+
+My tsconfig loks like this
+
+```
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // to resolve paths:
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/@/*"
+      ]
+    }
+
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
+```
+
+
+### 2. Update vite.config.ts
+`Installing @types/node`: 
+
+```
+npm i -D @types/node
+```
+
+- This command installs type definitions for Node.js, which are used to provide TypeScript type checking and auto-completion for Node.js core modules, like path.
+
+- Configuring Vite: The provided Vite configuration sets up an alias ("@": path.resolve(__dirname, "./src/@")). This allows you to use @ in your import statements to refer directly to files within the src/@ directory, simplifying imports and ensuring consistency across your application.
+
+```
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src/@"),
+    }
+  }
+})
+```
+
+### StoryLine 9: Why => Updating vite.config.ts & Updating tsconfig.json 
+- These configurations are crucial for managing complex project structures and maintaining consistency between development and production environments.

@@ -66,7 +66,12 @@ cd dockerized-react-boilerplate
 docker compose build --no-cache
 ```
 
-4. Start the react app
+4. install node modules
+```
+docker compose run --rm app npm install
+```
+
+5. Start the react app
 ```
 docker compose up
 ```
