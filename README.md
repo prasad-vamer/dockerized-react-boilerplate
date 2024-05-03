@@ -10,6 +10,7 @@ This is a boilerplate project for building React applications with TypeScript. I
   - `plain_vite_react`: Basic React TypeScript application
   - `react_ts_twcss`: React TypeScript application with Tailwind CSS configured
   - `react_router_6-23-0`: This is an ideal starting point for React projects utilizing React Router 6.23.0 and Tailwind CSS
+  - `shadcn_ui`: Planing to use shadcn components in the project, checkout this branch
   
 
 ## Branch Structure
@@ -41,6 +42,10 @@ The [react_ts_twcss](https://github.com/prasad-vamer/dockerized-react-boilerplat
 
 ### 3. `react_router_6-23-0`
 The [react_router_6-23-0](https://github.com/prasad-vamer/dockerized-react-boilerplate/tree/react_router_6-23-0) branch is a template for React projects that includes React Router 6.23.0 and Tailwind CSS. The project consist of configurations till `react_ts_twcss` and has been cleaned up and organized into `Components` and `Container` directories to follow react atomic design folder structure. The `Container` directory includes sample pages demonstrating the implementation of React Router. This branch is an ideal starting point for React projects utilizing Tailwind CSS and React Router.
+
+### 4. `shadcn_ui`
+
+The [shadcn_ui](https://github.com/prasad-vamer/dockerized-react-boilerplate/tree/shadcn_ui) branch is a template for React projects that includes shadcn. The project consist of configurations till `react_router_6-23-0`. If you are planning to implement shadcn components in your library this branch will be the better starting point for React projects.
 
 ## Prerequisites
 
