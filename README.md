@@ -11,6 +11,7 @@ This is a boilerplate project for building React applications with TypeScript. I
   - `react_ts_twcss`: React TypeScript application with Tailwind CSS configured
   - `react_router_6-23-0`: This is an ideal starting point for React projects utilizing React Router 6.23.0 and Tailwind CSS
   - `shadcn_ui`: Planing to use shadcn components in the project, checkout this branch
+  - `react_redux`: React Redux configuration with TypeScript
   
 
 ## Branch Structure
@@ -46,6 +47,10 @@ The [react_router_6-23-0](https://github.com/prasad-vamer/dockerized-react-boile
 ### 4. `shadcn_ui`
 
 The [shadcn_ui](https://github.com/prasad-vamer/dockerized-react-boilerplate/tree/shadcn_ui) branch is a template for React projects that includes shadcn. The project consist of configurations till `react_router_6-23-0`. If you are planning to implement shadcn components in your library this branch will be the better starting point for React projects.
+
+### 5. `react_redux`
+
+The [react_redux](https://github.com/prasad-vamer/dockerized-react-boilerplate/tree/react_redux) branch is a template for React projects that includes React Redux with TypeScript. The project consist of configurations till `shadcn_ui`. If you are planning to implement redux in your library this branch will be the better starting point for React projects.
 
 ## Prerequisites
 
