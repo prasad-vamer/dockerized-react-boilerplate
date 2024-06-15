@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import sampleFacilityUsersData from '../sampleFacilityUser.json';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField} from "@mui/material";
+import React from "react";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import DropDown from "../Components/DropDown";
 
 export interface FacilityUser {
@@ -13,6 +15,59 @@ export interface FacilityUser {
   gender: string;
   valid: boolean
 }
+
+interface TableRowComponentProps {
+  user: FacilityUser;
+  // onUserNameChange: (userId: string, newUserName: string) => void;
+  onFacilityUsersDataChange: (userId: string, field: string, value: string) => void
+}
+
+const TableRowComponent: React.FC<TableRowComponentProps> = React.memo(({ user, onFacilityUsersDataChange }) => {
+  // const handleUserNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   onUserNameChange(user.userId, event.target.value);
+  // };
+
+  const handleFacilityUsersDataChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onFacilityUsersDataChange(user.userId, event.target.name, event.target.value);
+  };
+  
+
+  return (
+    <TableRow key={user.userId}>
+      <TableCell>{user.userId}</TableCell>
+      <TableCell>
+        <TextField 
+          name="userName"
+          id={"userName"+user.userId} 
+          label="user-name" 
+          variant="outlined" 
+          value={user.userName} 
+          onChange={handleFacilityUsersDataChange}
+        />
+      </TableCell>
+      <TableCell>
+      <TextField id={"telNo"+user.userId} label="tel no" variant="outlined" value={user.tel} />
+      </TableCell>
+      <TableCell>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker />
+        </LocalizationProvider>
+      </TableCell>
+      <TableCell>
+        <DropDown
+          items={[{ id: "1", name: "male" }, { id: "2", name: "female" }]}
+          value={user.gender === "male" ? "1" : "2"}
+        />
+      </TableCell>
+      <TableCell>
+        <DropDown
+          items={[{ id: "1", name: "valid" }, { id: "2", name: "invalid  " }]}
+          value={user.valid ? "1" : "2"}
+        />
+      </TableCell>
+    </TableRow>
+  );
+});
 
 function Home() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -31,6 +86,47 @@ function Home() {
     setCurrentBatchIndex(end);
   }, [currentBatchIndex, batchSize, facilityUsersData]);
   
+  // const handleUserNameChange = (userId: string, newUserName: string) => {
+  //   setFacilityUsersData((prevData) =>
+  //     prevData.map((user) =>
+  //       user.userId === userId ? { ...user, userName: newUserName } : user
+  //     )
+  //   );
+  //   setVisibleUsersData((prevData) =>
+  //     prevData.map((user) =>
+  //       user.userId === userId ? { ...user, userName: newUserName } : user
+  //     )
+  //   );
+  // };
+
+  // const handleUserNameChange = useCallback(
+  //   (userId: string, newUserName: string) => {
+  //   setFacilityUsersData((prevData) =>
+  //     prevData.map((user) =>
+  //       user.userId === userId ? { ...user, userName: newUserName } : user
+  //     )
+  //   );
+  //   setVisibleUsersData((prevData) =>
+  //     prevData.map((user) =>
+  //       user.userId === userId ? { ...user, userName: newUserName } : user
+  //     )
+  //   );
+  // }, []);
+
+  const handleFacilityUsersDataChange = useCallback((userId:string, field:string, value: string) => {
+    setFacilityUsersData((prevData) => 
+      prevData.map((user) =>
+        user.userId === userId ? { ...user, [field]: value } : user
+      )
+    )
+
+    setVisibleUsersData((prevData) => 
+      prevData.map((user) =>
+        user.userId === userId ? { ...user, [field]: value } : user
+      )
+    )
+  }, []);
+
   // Step2: Now we'll update the useEffect to fetch the data and initialize the facilityUsersData state. We'll also call a function to process the first batch of data
   // Initial API fetching UseEffect
   useEffect(()=> {
@@ -66,6 +162,9 @@ function Home() {
   
       return () => clearTimeout(timer);
     }
+
+    console.log(facilityUsersData);
+    
   }, [currentBatchIndex, facilityUsersData, batchSize, processNextBatch]);
   
   
@@ -88,32 +187,7 @@ function Home() {
             </TableHead>
             <TableBody>
               {visibleUsersData.map((user) => (
-                <TableRow key={user.userId}>
-                  <TableCell>{user.userId}</TableCell>
-                  <TableCell>
-                    <TextField id="outlined-basic" label="user-name" variant="outlined" value={user.userName} />
-                  </TableCell>
-                  <TableCell>
-                    <TextField id="outlined-basic" label="tel no" variant="outlined" value={user.tel} />
-                  </TableCell>
-                  <TableCell>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker />
-                    </LocalizationProvider>
-                  </TableCell>
-                  <TableCell>
-                    <DropDown
-                      items={[{ id: "1", name: "male" }, { id: "2", name: "female" }]}
-                      value={user.gender === "male" ? "1" : "2"}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <DropDown
-                      items={[{ id: "1", name: "valid" }, { id: "2", name: "invalid  " }]}
-                      value={user.valid ? "1" : "2"}
-                    />
-                  </TableCell>
-                </TableRow>
+                <TableRowComponent key={user.userId} user={user}  onFacilityUsersDataChange={handleFacilityUsersDataChange}/>
               ))}
             </TableBody>
           </Table>
