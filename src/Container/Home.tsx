@@ -1,16 +1,9 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
 import sampleFacilityUsersData from '../sampleFacilityUser.json';
-
-
-interface ViewData {
-  userId: string;
-  userName: string;
-  tel: string;
-  birthday: string;
-  gender: string;
-  valid: string;
-}
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import DropDown from "../Components/DropDown";
 
 export interface FacilityUser {
   userId: string;
@@ -21,39 +14,31 @@ export interface FacilityUser {
   valid: boolean
 }
 
-// Logic to call the API
-const fetchUserData = async () => {
-
-}
-
 function Home() {
   const [loading, setLoading] = useState<boolean>(true);
-  const [facilityUsersData, setFacilityUsersData] = useState<FacilityUser[]>([]);
+  // STEP 1. Define the state variables
+  const [facilityUsersData, setFacilityUsersData] = useState<FacilityUser[]>([]); // to hold the complete data fetched from the API.
+  const [visibleUsersData, setVisibleUsersData] = useState<FacilityUser[]>([]); // to hold the data that is currently being rendered.
+  const [currentBatchIndex, setCurrentBatchIndex] = useState<number>(0); // to keep track of the current batch of data being rendered.
+  const [batchSize, setBatchSize] = useState<number>(10); // to keep track of the number of data to be rendered at a time.
 
+  // Step 3. Process next batch of data
+  const processNextBatch = useCallback(() => {
+    const start = currentBatchIndex;
+    const end = start + batchSize;
+    const nextBatch = facilityUsersData.slice(start, end);
+    setVisibleUsersData((prevData) => [...prevData, ...nextBatch]); 
+    setCurrentBatchIndex(end);
+  }, [currentBatchIndex, batchSize, facilityUsersData]);
+  
+  // Step2: Now we'll update the useEffect to fetch the data and initialize the facilityUsersData state. We'll also call a function to process the first batch of data
+  // Initial API fetching UseEffect
   useEffect(()=> {
-    // Method 1
-    setLoading(true);
-    fetchUserData().then((data: ViewData[] | void) => {
-      if (data) {
-        const facilityUsers = data.map((user) => {
-          return {
-            userId: user.userId,
-            userName: user.userName,
-            tel: user.tel,
-            birthday: user.birthday,
-            gender: user.gender,
-            valid: user.valid === "true"
-          }
-        });
-        setFacilityUsersData(facilityUsers);
-        setLoading(false);
-      }
-    })
-
+    setBatchSize(10);
     // Method 2
-    const facilityUsers = sampleFacilityUsersData.map((user) => {
+    const facilityUsers = sampleFacilityUsersData.map((user, index) => {
       return {
-        userId: user.userId,
+        userId: index.toString(),
         userName: user.userName,
         tel: user.tel,
         birthday: user.birthday,
@@ -62,18 +47,79 @@ function Home() {
       }
     });
     setFacilityUsersData(facilityUsers);
+
+    // Process the first batch of data
+    const firstBatch = facilityUsers.slice(0, batchSize);
+    setVisibleUsersData(firstBatch);
+    setCurrentBatchIndex(batchSize);
+
     setLoading(false);
-    
-  },[])
+
+  },[batchSize])
+
+  // Step 4: Call the processNextBatch function: We'll use a useEffect to call this function incrementally based on a timer or user action (e.g., scrolling).
+  useEffect(() => {
+    if (currentBatchIndex < facilityUsersData.length) {
+      const timer = setTimeout(() => {
+        processNextBatch();
+      }, 300); // Adjust the timeout as needed
+  
+      return () => clearTimeout(timer);
+    }
+  }, [currentBatchIndex, facilityUsersData, batchSize, processNextBatch]);
+  
+  
   return (
-    <div className="bg-purple-400">
+    <div>
       {loading && <h1>Loading...</h1>}
-      <h1>Home Page</h1>
-      <p>Colors using Tailwind CSS</p>
-      <p>Fine me in src/Container/Home.tsx</p>
-      <br />
-      <Link to={"/about"}>Go to About Page</Link>
-      {JSON.stringify(facilityUsersData)}
+
+      {facilityUsersData.length > 0 && (
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>UserId</TableCell>
+                <TableCell>UserName</TableCell>
+                <TableCell>Tel</TableCell>
+                <TableCell>Birthday</TableCell>
+                <TableCell>Gender</TableCell>
+                <TableCell>Valid</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {visibleUsersData.map((user) => (
+                <TableRow key={user.userId}>
+                  <TableCell>{user.userId}</TableCell>
+                  <TableCell>
+                    <TextField id="outlined-basic" label="user-name" variant="outlined" value={user.userName} />
+                  </TableCell>
+                  <TableCell>
+                    <TextField id="outlined-basic" label="tel no" variant="outlined" value={user.tel} />
+                  </TableCell>
+                  <TableCell>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker />
+                    </LocalizationProvider>
+                  </TableCell>
+                  <TableCell>
+                    <DropDown
+                      items={[{ id: "1", name: "male" }, { id: "2", name: "female" }]}
+                      value={user.gender === "male" ? "1" : "2"}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <DropDown
+                      items={[{ id: "1", name: "valid" }, { id: "2", name: "invalid  " }]}
+                      value={user.valid ? "1" : "2"}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>        
+      )}
+      {currentBatchIndex < facilityUsersData.length && <p>Loading more data...</p>}
     </div>
   )
 }
